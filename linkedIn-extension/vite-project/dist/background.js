@@ -25,11 +25,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   }
 
-  // if (request.action === 'paymentComplete') {
-  //   // Forward the message to the extension popup
-  //   chrome.runtime.sendMessage(request);
-  // }
-
   if (request.action === "fetchDetailedProfile") {
     chrome.tabs.create({ url: request.url, active: false }, (tab) => {
       chrome.tabs.onUpdated.addListener(function listener(tabId, info) {

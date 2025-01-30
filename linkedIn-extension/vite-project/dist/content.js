@@ -1,8 +1,9 @@
-
 let iconElement = null;
 let currentInputElement = null;
 let activeElement = null;
 let loadingAnimation = null;
+let requestCount = 0;
+const MAX_FREE_REQUESTS = 20;
 
 // Function to send messages to the background script
 function sendMessage(message) {
@@ -17,7 +18,6 @@ function sendMessage(message) {
   });
 }
 
-// Function to extract context based on the current platform
 function extractContext() {
   const url = window.location.href;
   let platform = '';
@@ -26,15 +26,6 @@ function extractContext() {
   if (url.includes('linkedin.com')) {
     platform = 'LinkedIn';
     context = extractLinkedInContext();
-  } else if (url.includes('twitter.com')) {
-    platform = 'Twitter';
-    context = extractTwitterContext();
-  } else if (url.includes('facebook.com')) {
-    platform = 'Facebook';
-    context = extractFacebookContext();
-  } else if (url.includes('youtube.com')) {
-    platform = 'YouTube';
-    context = extractYouTubeContext();
   } else {
     platform = 'Unknown';
     context = 'Unable to extract context from this platform.';
@@ -47,25 +38,6 @@ function extractLinkedInContext() {
   const postContent = document.querySelector('.feed-shared-update-v2__description')?.textContent || '';
   const comments = Array.from(document.querySelectorAll('.comments-comment-item-content')).map(comment => comment.textContent).join('\n');
   return `Post: ${postContent}\n\nComments: ${comments}`;
-}
-
-function extractTwitterContext() {
-  const tweetContent = document.querySelector('article[data-testid="tweet"]')?.textContent || '';
-  const replyChain = Array.from(document.querySelectorAll('article[data-testid="tweet"]')).map(tweet => tweet.textContent).join('\n');
-  return `Tweet: ${tweetContent}\n\nReply Chain: ${replyChain}`;
-}
-
-function extractFacebookContext() {
-  const postContent = document.querySelector('[data-ad-preview="message"]')?.textContent || '';
-  const comments = Array.from(document.querySelectorAll('.UFICommentBody')).map(comment => comment.textContent).join('\n');
-  return `Post: ${postContent}\n\nComments: ${comments}`;
-}
-
-function extractYouTubeContext() {
-  const videoTitle = document.querySelector('h1.title')?.textContent || '';
-  const videoDescription = document.querySelector('#description')?.textContent || '';
-  const comments = Array.from(document.querySelectorAll('#content-text')).map(comment => comment.textContent).join('\n');
-  return `Title: ${videoTitle}\n\nDescription: ${videoDescription}\n\nComments: ${comments}`;
 }
 
 function showErrorMessage(message) {
@@ -88,11 +60,15 @@ function showErrorMessage(message) {
   }, 5000);
 }
 
-
-// Function to handle commands
 async function handleCommand(command) {
   console.log("Handling command:", command);
   try {
+    const requiresAuth = await checkRequestCount();
+    if (requiresAuth) {
+      showAuthRequiredMessage();
+      return;
+    }
+
     showLoadingAnimation();
     const { platform, context } = extractContext();
     const selectedText = window.getSelection().toString();
@@ -110,6 +86,7 @@ async function handleCommand(command) {
       insertText(`Error: ${response.error}`);
     } else {
       insertText(response.text);
+      incrementRequestCount();
     }
   } catch (error) {
     console.error("Error handling command:", error);
@@ -119,7 +96,6 @@ async function handleCommand(command) {
   }
 }
 
-// Function to insert text into the active element
 function insertText(text) {
   if (activeElement) {
     if (activeElement.isContentEditable) {
@@ -139,7 +115,6 @@ function insertText(text) {
   }
 }
 
-// Function to show loading animation
 function showLoadingAnimation() {
   if (activeElement) {
     loadingAnimation = document.createElement('div');
@@ -159,7 +134,6 @@ function showLoadingAnimation() {
   }
 }
 
-// Function to hide loading animation
 function hideLoadingAnimation() {
   if (loadingAnimation && loadingAnimation.parentNode) {
     loadingAnimation.parentNode.removeChild(loadingAnimation);
@@ -167,31 +141,6 @@ function hideLoadingAnimation() {
   }
 }
 
-//Function to handle key presses
-// function handleKeyPress(event) {
-//   if (event.key === 'Enter' && !event.shiftKey) {
-//     const element = event.target;
-//     if (element.tagName === 'TEXTAREA' || element.tagName === 'INPUT' || element.isContentEditable) {
-//       const text = element.isContentEditable ? element.textContent : element.value;
-//       if (text.startsWith('/')) {
-//         event.preventDefault();
-//         const command = text.slice(1).trim();
-//         if (command) {
-//           console.log("Command detected:", command);
-//           handleCommand(command);
-//           // Clear the command from the input
-//           if (element.isContentEditable) {
-//             element.textContent = '';
-//           } else {
-//             element.value = '';
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
-// Updated handleKeyPress function
 async function handleKeyPress(event) {
   if (event.key === 'Enter' && !event.shiftKey) {
     const element = event.target;
@@ -202,7 +151,6 @@ async function handleKeyPress(event) {
         const command = text.slice(1).trim();
         if (command) {
           console.log("Command detected:", command);
-          // Clear the command from the input immediately
           if (element.isContentEditable) {
             element.textContent = '';
           } else {
@@ -215,7 +163,6 @@ async function handleKeyPress(event) {
   }
 }
 
-// Updated handleAIAssistant function
 async function handleAIAssistant(inputElement, command = '') {
   if (!inputElement) return;
 
@@ -226,9 +173,7 @@ async function handleAIAssistant(inputElement, command = '') {
 
   if (inputElement.closest('.msg-form__contenteditable')) {
     context = 'message';
-    if (!text) {
-      text = getLatestSenderMessage(inputElement);
-    }
+    text = getLatestSenderMessage(inputElement);
   } else if (
     inputElement.closest('.artdeco-button__text') || 
     inputElement.closest('.comments-comment-box-comment__text-editor')
@@ -259,6 +204,7 @@ async function handleAIAssistant(inputElement, command = '') {
 
   try {
     showLoadingAnimation();
+    console.log("AI text:", text);
     const reply = await getAIReply(text, context, previousMessages, additionalContext);
     if (reply) {
       insertReplyIntoInput(inputElement, reply);
@@ -273,10 +219,6 @@ async function handleAIAssistant(inputElement, command = '') {
   }
 }
 
-
-
-
-// Function to handle input events
 function handleInput(event) {
   console.log("Input event detected:", event);
   const element = event.target;
@@ -287,24 +229,21 @@ function handleInput(event) {
   }
 }
 
-// Function to initialize the content script
 function initialize() {
   console.log("Content script initialized");
   document.addEventListener('input', handleInput);
   document.addEventListener('keydown', handleKeyPress);
+  extractAndStoreUserProfile();
 }
 
-// Run the initialization
-initialize();
-
 function createIcon() {
-  if (iconElement) return; // Prevent creating multiple icons
+  if (iconElement) return;
 
   iconElement = document.createElement('div');
   iconElement.className = 'linkedin-assistant-icon';
 
   const img = document.createElement('img');
-  img.src = chrome.runtime.getURL('image.png'); // Get the correct URL for the image
+  img.src = chrome.runtime.getURL('image.png');
   img.alt = 'LinkedIn Assistant Icon';
   
   img.style.cssText = `
@@ -378,66 +317,10 @@ function hideIcon() {
   }
 }
 
-// async function handleIconClick() {
-//   if (!currentInputElement) return;
-
-//   let inputElement = currentInputElement;
-//   let context = '';
-//   let text = '';
-//   let previousMessages = [];
-//   let additionalContext = '';
-
-//   if (inputElement.closest('.msg-form__contenteditable')) {
-//     context = 'message';
-//     text = getLatestSenderMessage(inputElement);
-//     console.log("Text context :" + text);
-//   } else if (
-//     inputElement.closest('.artdeco-button__text') || 
-//     inputElement.closest('.comments-comment-box-comment__text-editor')
-//   ) {
-//     context = 'comment';
-//     console.log("Comment context detected");
-//     text = inputElement.textContent || '';
-//   } else if (
-//     inputElement.closest('.share-creation-state__text-editor') || 
-//     inputElement.closest('.ql-editor')
-//   ) {
-//     context = 'post';
-//     console.log("Post context detected");
-//     text = inputElement.textContent || '';
-//   }
-
-//   console.log(`Current context: ${context}`);
-
-//   if (!context) {
-//     showErrorMessage('Please click on a valid input field before using the AI assistant.');
-//     return;
-//   }
-
-//   previousMessages = getPreviousMessages(inputElement, context);
-//   additionalContext = getAdditionalContext(context, inputElement);
-
-//   try {
-//     const reply = await getAIReply(text, 
-//  context, previousMessages, additionalContext);
-//     if (reply) {
-//       insertReplyIntoInput(inputElement, reply);
-//     } else {
-//       throw new Error('No reply generated');
-//     }
-//   } catch (error) {
-//     console.error('Error generating reply:', error);
-//     showErrorMessage(`Error: ${error.message}. Please try again.`);
-//   }
-// }
-
-// Updated handleIconClick function
 async function handleIconClick() {
   if (!currentInputElement) return;
   await handleAIAssistant(currentInputElement);
 }
-
-
 
 function getLatestSenderMessage(inputElement) {
   const conversationContainer = inputElement.closest('.msg-convo-wrapper');
@@ -463,37 +346,17 @@ function getLatestSenderMessage(inputElement) {
   return messageText ? `${senderName}: ${messageText}` : 'No recent message found';
 }
 
-// function insertReplyIntoInput(inputElement, reply) {
-//   if (inputElement.getAttribute('contenteditable') === 'true') {
-//     inputElement.focus();
-//     inputElement.innerHTML = '';
-//     const paragraph = document.createElement('p');
-//     paragraph.textContent = reply;
-//     inputElement.appendChild(paragraph);
-//     inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-//   } else if (inputElement.tagName === 'TEXTAREA' || inputElement.tagName === 'INPUT') {
-//     inputElement.value = reply;
-//     inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-//   }
-// }
-
-// Updated insertReplyIntoInput function
-
-
 function insertReplyIntoInput(inputElement, reply) {
   if (inputElement.getAttribute('contenteditable') === 'true') {
-        inputElement.focus();
-        inputElement.innerHTML = '';
-        const paragraph = document.createElement('p');
-        paragraph.textContent = reply;
-        inputElement.appendChild(paragraph);
-        inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-     else if (inputElement.tagName === 'TEXTAREA' || inputElement.tagName === 'INPUT') {
+    inputElement.focus();
+    inputElement.innerHTML = '';
+    const paragraph = document.createElement('p');
+    paragraph.textContent = reply;
+    inputElement.appendChild(paragraph);
+    inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+  } else if (inputElement.tagName === 'TEXTAREA' || inputElement.tagName === 'INPUT') {
     inputElement.value = reply;
     inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-    
-    // Set cursor at the end of the input
     inputElement.selectionStart = inputElement.selectionEnd = inputElement.value.length;
   }
   inputElement.focus();
@@ -539,7 +402,7 @@ function getPreviousMessages(element, context) {
     if (context === 'message') {
       messageElements = container.querySelectorAll('.msg-s-event-listitem__message-bubble');
     } else if (context === 'comment') {
-      messageElements =   container.querySelectorAll('.comments-comment-item');
+      messageElements = container.querySelectorAll('.comments-comment-item');
     } else if (context === 'post') {
       messageElements = [container.querySelector('.ql-editor')];
     }
@@ -553,58 +416,180 @@ function getPreviousMessages(element, context) {
     });
   }
 
-  return messages.slice(-5);  // Return the last 5 messages
+  return messages.slice(-5);
 }
 
-// function getAIReply(text, context, previousMessages, additionalContext) {
-//   return new Promise((resolve, reject) => {
-//     chrome.runtime.sendMessage({
-//       action: "getAIReply",
-//       data: { text, context, previousMessages, additionalContext }
-//     }, response => {
-//       if (chrome.runtime.lastError) {
-//         reject(new Error(chrome.runtime.lastError.message));
-//       } else if (response && response.success) {
-//         resolve(response.reply);
-//       } else {
-//         const errorMessage = (response && response.error) || 'Failed to generate reply';
-//         if (errorMessage.includes('Rate limit exceeded') || errorMessage.includes('Daily request limit exceeded')) {
-//           showErrorMessage(errorMessage);
-//         }
-//         reject(new Error(errorMessage));
-//       }
-//     });
-//   });
-// }
+function debugLog(...args) {
+  console.log('[LinkedIn Assistant Debug]', ...args);
+}
 
-// Updated getAIReply function
-
-
-function getAIReply(prompt, context, previousMessages, additionalContext) {
-  return new Promise((resolve, reject) => {
-    chrome.runtime.sendMessage({
-      action: "getAIReply",
-      data: { prompt, context, previousMessages, additionalContext }
-    }, response => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-      } else if (response && response.success) {
-        resolve(response.reply);
-      } else {
-        const errorMessage = (response && response.error) || 'Failed to generate reply';
-        if (errorMessage.includes('Rate limit exceeded') || errorMessage.includes('Daily request limit exceeded')) {
-          showErrorMessage(errorMessage);
+function getAIReply(text, context, previousMessages, additionalContext) {
+  console.log('getAIReply called with:', { text, context, previousMessages, additionalContext });
+  return new Promise((resolve, reject) => 
+    chrome.storage.local.get(['userProfile', 'requestCount'], function(result) {
+      console.log('Storage data:', result);
+      const userProfile = result.userProfile || {};
+      const currentRequestCount = result.requestCount || 0;
+      chrome.runtime.sendMessage({
+        action: "getAIReply",
+        data: { text, context, previousMessages, additionalContext, userProfile, currentRequestCount }
+      }, response => {
+        console.log('Response from background script:', response);
+        if (chrome.runtime.lastError) {
+          console.error('Chrome runtime error:', chrome.runtime.lastError);
+          reject(new Error(chrome.runtime.lastError.message));
+        } else if (response && response.success) {
+          console.log('AI reply received successfully');
+          if (response.newRequestCount !== undefined) {
+            chrome.storage.local.set({ requestCount: response.newRequestCount }, () => {
+              console.log('Request count updated:', response.newRequestCount);
+            });
+          }
+          resolve(response.reply);
+        } else {
+          const errorMessage = (response && response.error) || 'Failed to generate reply';
+          console.error('Error generating reply:', errorMessage);
+          if (errorMessage.includes('Rate limit exceeded') || errorMessage.includes('Daily request limit exceeded')) {
+            showErrorMessage(errorMessage);
+          }
+          reject(new Error(errorMessage));
         }
-        reject(new Error(errorMessage));
+      });
+    })
+  );
+}
+
+
+
+function extractAndStoreUserProfile() {
+  if (window.location.href === "https://www.linkedin.com/feed/") {
+    chrome.storage.local.get(['userProfile'], function(result) {
+      if (!result.userProfile) {
+        console.log("Extracting user profile from homepage");
+        const nameElement = document.querySelector('.feed-identity-module__actor-meta a');
+        const titleElement = document.querySelector('.feed-identity-module__headline');
+        
+        const userProfile = {
+          name: nameElement ? nameElement.textContent.trim() : '',
+          title: titleElement ? titleElement.textContent.trim() : '',
+          about: '',
+          experience: [],
+          education: []
+        };
+
+        chrome.storage.local.set({ userProfile: userProfile }, function() {
+          console.log('Initial user profile stored:', userProfile);
+        });
+
+        fetchDetailedProfileData();
+      } else {
+        console.log('User profile already stored:', result.userProfile);
       }
     });
+  }
+}
+
+function fetchDetailedProfileData() {
+  const profileLink = document.querySelector('.feed-identity-module__actor-meta a');
+  if (profileLink) {
+    const profileUrl = profileLink.href;
+    chrome.runtime.sendMessage({ action: "fetchDetailedProfile", url: profileUrl });
+  }
+}
+
+function extractProfileDataFromFeed() {
+  const profileCard = document.querySelector('.feed-identity-module');
+  if (!profileCard) return null;
+
+  const name = profileCard.querySelector('.feed-identity-module__actor-meta a')?.textContent.trim() || '';
+  const title = profileCard.querySelector('.feed-identity-module__headline')?.textContent.trim() || '';
+  const photoUrl = profileCard.querySelector('.feed-identity-module__member-photo')?.src || '';
+  const connectionCount = profileCard.querySelector('.feed-identity-module__stat strong')?.textContent.trim() || '0';
+
+  return {
+    name,
+    title,
+    photoUrl,
+    connectionCount,
+    about: '',
+    experience: [],
+    education: []
+  };
+}
+
+function sendProfileDataToBackground(profileData) {
+  chrome.runtime.sendMessage({
+    action: "updateUserProfile",
+    data: profileData
+  }, response => {
+    if (chrome.runtime.lastError) {
+      console.error('Error sending profile data:', chrome.runtime.lastError);
+    } else {
+      console.log('Profile data sent to background script:', response);
+    }
   });
+}
+
+function initializeProfileDataExtraction() {
+  const profileData = extractProfileDataFromFeed();
+  if (profileData) {
+    sendProfileDataToBackground(profileData);
+  }
+}
+
+function extractDetailedProfileData() {
+  const aboutElement = document.querySelector('.pv-about-section .pv-shared-text-with-see-more');
+  const experienceElements = document.querySelectorAll('.pv-experience-section .pv-position-entity');
+  const educationElements = document.querySelectorAll('.pv-education-section .pv-education-entity');
+
+  const about = aboutElement ? aboutElement.textContent.trim() : '';
+  const experience = Array.from(experienceElements).map(el => {
+    const title = el.querySelector('.t-16.t-black.t-bold')?.textContent.trim();
+    const company = el.querySelector('.pv-entity__secondary-title')?.textContent.trim();
+    return `${title} at ${company}`;
+  });
+  const education = Array.from(educationElements).map(el => {
+    const school = el.querySelector('.pv-entity__school-name')?.textContent.trim();
+    const degree = el.querySelector('.pv-entity__degree-name .pv-entity__comma-item')?.textContent.trim();
+    return `${degree} from ${school}`;
+  });
+
+  chrome.storage.local.get(['userProfile'], function(result) {
+    const updatedProfile = {
+      ...result.userProfile,
+      about,
+      experience,
+      education
+    };
+
+    chrome.storage.local.set({ userProfile: updatedProfile }, function() {
+      console.log('Detailed user profile stored:', updatedProfile);
+    });
+  });
+}
+
+async function checkRequestCount() {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage({ action: "checkRequestCount" }, (response) => {
+      resolve(response.requiresAuth);
+    });
+  });
+}
+
+function incrementRequestCount() {
+  chrome.runtime.sendMessage({ action: "incrementRequestCount" });
+}
+
+function showAuthRequiredMessage() {
+  showErrorMessage('You have reached the limit of free requests. Please sign up or log in to continue using the extension.');
 }
 
 function init() {
   createIcon();
   document.addEventListener('focus', handleTextBoxClick, true);
   document.addEventListener('keydown', handleKeyPress);
+
+  initializeProfileDataExtraction();
 
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -621,7 +606,7 @@ function init() {
                 }
               }, 100);
 
-              setTimeout(() => clearInterval(checkForPostInput), 5000); // Clear interval after 5 seconds if not found
+              setTimeout(() => clearInterval(checkForPostInput), 5000);
             }
           }
         });
@@ -644,6 +629,13 @@ function init() {
       hideIcon();
     }
   });
+
+  extractAndStoreUserProfile();
+
+  // Load the request count from storage
+  chrome.storage.local.get(['requestCount'], (result) => {
+    requestCount = result.requestCount || 0;
+  });
 }
 
 init();
@@ -656,10 +648,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     showIcon();
   } else if (request.action === "hideIcon") {
     hideIcon();
-  }
-
-  if (request.action === "insertText") {
+  } else if (request.action === "insertText") {
     insertText(request.text);
+    sendResponse({ success: true });
+  } else if (request.action === "extractDetailedProfile") {
+    // extractDetailedProfileData();
     sendResponse({ success: true });
   }
   return true;

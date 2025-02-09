@@ -16,7 +16,7 @@ const ReportViewPage = () => {
 
   const fetchReport = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/reports/${id}`);
+      const response = await fetch(`https://cap-09-2.onrender.com/api/reports/${id}`);
       if (response.ok) {
         const data = await response.json();
         setReport(data);

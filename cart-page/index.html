@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <!-- REPLACE THIS WITH YOUR PROJECT NAME. EXAMPLE - Category tabs -->
+    <title>Responsive Cart Page</title>
+    <script src="./script.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Your code goes here -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="https://s3-alpha-sig.figma.com/img/2727/769b/a74736d502746301ed573ed8940fc322?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=IIWqPF5ExRWJzxlzSAkuMykO17XTxeGX~lMjRFAmstQm~Qid02MYZ8~vJjs3PaK2KSaV1yMvQq6Sppo1Z6IY1dlV8whgX3gp6Rn-PO8X1iVxctqTOVCp7qVEd7wWqWs6-Y7SHlI6ki~XUfWL4FLCYrolxSoTp-1Wq9S6mMZqgfJf2-peU384Cjm~JkIQ3T3Bxp0~wE62zgRvkWGni7yFS~M1iSnEpZZGlRvMwAmrcYNUhMgRkl3AUlandnEJBkIrETkPBAamRUNFTpWYRJUYtbo-y3RFNArZNBPtZQC-yfwbjgYYQVUAJHlW4OaTeHlcM7chAuDV00A-dJVkttSjmw__"
+                    alt="Marmeto Logo">
+                <span id="title">Marmeto</span>
+            </div>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">Shop</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="nav-icons">
+                <i class="fas fa-search"></i>
+                <i class="far fa-heart"></i>
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <img src="https://s3-alpha-sig.figma.com/img/2727/769b/a74736d502746301ed573ed8940fc322?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=IIWqPF5ExRWJzxlzSAkuMykO17XTxeGX~lMjRFAmstQm~Qid02MYZ8~vJjs3PaK2KSaV1yMvQq6Sppo1Z6IY1dlV8whgX3gp6Rn-PO8X1iVxctqTOVCp7qVEd7wWqWs6-Y7SHlI6ki~XUfWL4FLCYrolxSoTp-1Wq9S6mMZqgfJf2-peU384Cjm~JkIQ3T3Bxp0~wE62zgRvkWGni7yFS~M1iSnEpZZGlRvMwAmrcYNUhMgRkl3AUlandnEJBkIrETkPBAamRUNFTpWYRJUYtbo-y3RFNArZNBPtZQC-yfwbjgYYQVUAJHlW4OaTeHlcM7chAuDV00A-dJVkttSjmw__"
+                alt="Marmeto Logo">
+            <h1>Cart</h1>
+            <div class="breadcrumb">
+                <a href="#">Home</a>
+                <span>></span>
+                <span>Cart</span>
+            </div>
+        </div>
+
+        <div class="cart-container">
+            <div class="cart-items">
+                <div class="cart-header">
+                    <span>Product</span>
+                    <span>Price</span>
+                    <span>Quantity</span>
+                    <span>Subtotal</span>
+                </div>
+                <div id="cart-items-container"></div>
+            </div>
+
+            <div class="cart-totals">
+                <h2>Cart Totals</h2>
+                <div class="totals-content">
+                    <div class="subtotal-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal" style="color: #898989"></span>
+                    </div>
+                    <div class="total-row">
+                        <span>Total</span>
+                        <span id="total" style="color: #B88E2F"></span>
+                    </div>
+                    <button class="checkout-btn">Check Out</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="services">
+            <div class="service-item">
+                <i class="fas fa-trophy"></i>
+                <h3>High Quality</h3>
+                <p style="color: #898989">crafted from top materials</p>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Warranty Protection</h3>
+                <p style="color: #898989">Over 2 years</p>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-shipping-fast"></i>
+                <h3>Free Shipping</h3>
+                <p style="color: #898989">Order over 150 $</p>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-headset"></i>
+                <h3>24 / 7 Support</h3>
+                <p style="color: #898989">Dedicated support</p>
+            </div>
+        </div>
+    </main>
+    <!-- Happy coding 😊 -->
+
+</body>
+
+</html>

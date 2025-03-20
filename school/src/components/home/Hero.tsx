@@ -2,14 +2,14 @@ import React from 'react';
 
 export default function Hero() {
   return (
-    <div className="relative min-h-[400px] md:min-h-[500px] lg:min-h-[600px]">
+    <section className="relative w-full min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] scroll-mt-16 md:scroll-mt-20">
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url(https://lh3.googleusercontent.com/p/AF1QipMh-LoytSJW2rmCyNrl9oJivm9NKBXSY8qPONTu=s1360-w1360-h1020)"
         }}
       >
-        <div className="absolute inset-0 bg-blue-900/60"></div>
+        <div className="absolute inset-0 bg-blue-900/60 backdrop-blur-[2px]"></div>
       </div>
       
       <div className="relative container mx-auto px-4 h-full flex items-center">
@@ -30,12 +30,37 @@ export default function Hero() {
             </span>
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
-            <button className="min-w-[44px] min-h-[44px] bg-yellow-500 text-blue-900 px-6 py-3 rounded-md font-semibold hover:bg-yellow-400 text-base md:text-lg transition-colors">
+            <button className="
+              min-w-[44px] 
+              min-h-[44px] 
+              bg-yellow-500 
+              text-blue-900 
+              px-6 
+              py-3 
+              rounded-md 
+              font-semibold 
+              hover:bg-yellow-400 
+              text-base 
+              md:text-lg 
+              transition-all
+              transform hover:scale-105
+              focus:outline-none 
+              focus:ring-2 
+              focus:ring-yellow-400
+              focus:ring-offset-2
+              focus:ring-offset-blue-900
+            ">
               Apply Now
             </button>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Decorative bottom fade */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-gray-50 to-transparent"
+        aria-hidden="true"
+      />
+    </section>
   );
 }

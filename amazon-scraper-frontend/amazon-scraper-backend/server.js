@@ -15,7 +15,15 @@ app.get("/scrape", async (req, res) => {
     if (!url) return res.status(400).json({ error: "Amazon product URL is required" });
 
     try {
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({
+            headless: "new",
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+            ],
+        });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: "domcontentloaded" });
 

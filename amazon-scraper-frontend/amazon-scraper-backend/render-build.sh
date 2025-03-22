@@ -11,7 +11,3 @@ export PUPPETEER_EXECUTABLE_PATH="/opt/render/.cache/puppeteer/chrome/linux-134.
 
 # Verify Chrome installation
 ls -l $PUPPETEER_EXECUTABLE_PATH
-
-console.log("Checking Puppeteer paths...");
-console.log("Puppeteer default path:", puppeteer.executablePath());
-console.log("PUPPETEER_EXECUTABLE_PATH:", process.env.PUPPETEER_EXECUTABLE_PATH);

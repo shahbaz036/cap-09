@@ -15,16 +15,20 @@ app.get("/scrape", async (req, res) => {
     if (!url) return res.status(400).json({ error: "Amazon product URL is required" });
 
     try {
-        console.log("Using Puppeteer executable path:", process.env.PUPPETEER_EXECUTABLE_PATH);
+        console.log("Using Puppeteer executable path:", process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser");
 
-    const browser = await puppeteer.launch({
-        headless: "new",
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH, // Use environment variable
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+        const browser = await puppeteer.launch({
+            headless: "new",
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
+    
         const page = await browser.newPage();
-        // await page.goto(url, { waitUntil: "domcontentloaded" });
         await page.goto("https://www.amazon.com/");
+
+        // const page = await browser.newPage();
+        // await page.goto(url, { waitUntil: "domcontentloaded" });
+        
 
         const productData = await page.evaluate(() => {
             const getText = (selector) => document.querySelector(selector)?.innerText.trim() || "N/A";

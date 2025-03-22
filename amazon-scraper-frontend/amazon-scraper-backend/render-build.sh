@@ -3,11 +3,12 @@
 # Install dependencies
 npm install
 
-# Install Chrome manually
-npx puppeteer browsers install chrome
+# Install Chromium manually
+sudo apt-get update
+sudo apt-get install -y chromium-browser
 
-# Export Puppeteer Chrome path
-export PUPPETEER_EXECUTABLE_PATH="/opt/render/.cache/puppeteer/chrome/linux-134.0.6998.35/chrome-linux64/chrome"
+# Set the executable path for Puppeteer
+export PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
 
-# Verify Chrome installation
+# Verify Chromium installation
 ls -l $PUPPETEER_EXECUTABLE_PATH

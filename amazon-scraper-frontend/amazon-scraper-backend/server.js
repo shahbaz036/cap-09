@@ -16,13 +16,9 @@ app.get("/scrape", async (req, res) => {
 
     try {
         const browser = await puppeteer.launch({
-            headless: "new",
-            args: [
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-dev-shm-usage",
-                "--disable-gpu",
-            ],
+            headless: true,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/opt/render/.cache/puppeteer/chrome/linux-134.0.6998.35/chrome",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
         });
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: "domcontentloaded" });

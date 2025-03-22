@@ -15,9 +15,10 @@ app.get("/scrape", async (req, res) => {
     if (!url) return res.status(400).json({ error: "Amazon product URL is required" });
 
     try {
+        console.log("Using Puppeteer executable path:", puppeteer.executablePath());
         const browser = await puppeteer.launch({
             headless: "new",
-            executablePath: "/opt/render/.cache/puppeteer/chrome/linux-134.0.6998.35/chrome-linux64/chrome",
+            executablePath: puppeteer.executablePath(), // Dynamically get path
             args: ["--no-sandbox", "--disable-setuid-sandbox"],
         });
         const page = await browser.newPage();

@@ -1,5 +1,6 @@
 const express = require("express");
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
+const { chromium } = require("playwright-chromium");
 const cors = require("cors");
 require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -15,20 +16,20 @@ app.get("/scrape", async (req, res) => {
     if (!url) return res.status(400).json({ error: "Amazon product URL is required" });
 
     try {
-        console.log("Using Puppeteer executable path:", process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser");
+        console.log("Launching Playwright Chromium...");
 
-        const browser = await puppeteer.launch({
-            headless: "new",
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        });
-    
-        const page = await browser.newPage();
-        await page.goto("https://www.amazon.com/");
+    const browser = await chromium.launch({
+        headless: true, // Set headless to true for server environments
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    });
 
+    const page = await browser.newPage();
+    await page.goto("https://www.amazon.com/");
+
+    console.log("Page title:", await page.title());
+        // const browser = await puppeteer.launch({ headless: true });
         // const page = await browser.newPage();
         // await page.goto(url, { waitUntil: "domcontentloaded" });
-        
 
         const productData = await page.evaluate(() => {
             const getText = (selector) => document.querySelector(selector)?.innerText.trim() || "N/A";

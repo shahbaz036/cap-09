@@ -15,7 +15,7 @@ function App() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get(`http://localhost:5000/scrape?url=${encodeURIComponent(url)}`);
+      const response = await axios.get(`https://web-scraper-g6bm.onrender.com/scrape?url=${encodeURIComponent(url)}`);
       setData(response.data);
     } catch (err) {
       setError("Failed to fetch product details.");
@@ -75,7 +75,6 @@ function App() {
             )}
           </div>
 
-          {/* Manufacturer Images */}
           <h3 className="mt-4 font-semibold">Manufacturer Images:</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {data.manufacturerImages.length > 0 ? (
@@ -86,8 +85,6 @@ function App() {
               <p className="text-gray-500">No manufacturer images available</p>
             )}
           </div>
-
-
 
           <h3 className="mt-4 font-semibold">AI Review Summary:</h3>
           <p className="bg-gray-200 p-2 rounded">{data.aiReviewSummary}</p>

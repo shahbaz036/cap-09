@@ -1,5 +1,4 @@
 const express = require("express");
-// const puppeteer = require("puppeteer");
 const { chromium } = require("playwright-chromium");
 const cors = require("cors");
 require("dotenv").config();
@@ -18,23 +17,20 @@ app.get("/scrape", async (req, res) => {
     try {
         console.log("Launching Playwright Chromium...");
 
-    const browser = await chromium.launch({
-        headless: true, // Set headless to true for server environments
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+        const browser = await chromium.launch({
+            headless: true, // Set headless to true for server environments
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        });
 
-    const page = await browser.newPage();
-    await page.goto("https://www.amazon.com/");
+        const page = await browser.newPage();
 
-    console.log("Page title:", await page.title());
-        // const browser = await puppeteer.launch({ headless: true });
-        // const page = await browser.newPage();
-        // await page.goto(url, { waitUntil: "domcontentloaded" });
+        console.log("Page title:", await page.title());
+        await page.goto(url, { waitUntil: "domcontentloaded" });
 
         const productData = await page.evaluate(() => {
             const getText = (selector) => document.querySelector(selector)?.innerText.trim() || "N/A";
 
-            // Extracts unique product images properly
+            // Extracts product images
             const extractProductImages = () => {
                 let images = new Set();
                 document.querySelectorAll(".imgTagWrapper img").forEach((img) => {
@@ -44,7 +40,6 @@ app.get("/scrape", async (req, res) => {
                 return Array.from(images);
             };
 
-            // Extracts manufacturer images separately
             const extractManufacturerImages = () => {
                 let images = new Set();
                 document.querySelectorAll(".celwidget .aplus-module img").forEach((img) => {
@@ -63,11 +58,8 @@ app.get("/scrape", async (req, res) => {
                 bankOffers: Array.from(document.querySelectorAll(".vsx__offers")).map(el => el.innerText),
                 aboutThisItem: Array.from(document.querySelectorAll("#feature-bullets ul li")).map(el => el.innerText),
                 productInfo: Array.from(document.querySelectorAll("#productOverview_feature_div .a-spacing-small")).map(el => el.innerText),
-
-                // ✅ Correct product and manufacturer images (no duplicates)
                 images: extractProductImages(),
                 manufacturerImages: extractManufacturerImages(),
-
                 reviews: Array.from(document.querySelectorAll(".review-text-content")).map(el => el.innerText.trim()).slice(0, 5),
             };
         });

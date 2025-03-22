@@ -15,7 +15,7 @@ function App() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get(`http://localhost:5000/scrape?url=${encodeURIComponent(url)}`);
+      const response = await axios.get(`https://web-scraper-g6bm.onrender.com/scrape?url=${encodeURIComponent(url)}`);
       setData(response.data);
     } catch (err) {
       setError("Failed to fetch product details.");

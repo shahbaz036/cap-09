@@ -8,7 +8,7 @@ function App() {
   const [error, setError] = useState("");
 
   const fetchData = async () => {
-    if (!url.includes("amazon.in")) {
+    if (!(url.includes("amazon.in") || url.includes("amzn.in"))) {
       setError("Please enter a valid Amazon India product URL.");
       return;
     }

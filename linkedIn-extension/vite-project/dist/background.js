@@ -79,7 +79,7 @@ function handleGetAIReply(data, port) {
       headers['Authorization'] = `Bearer ${token}`;
     }
     
-    fetch('http://localhost:5000/api/get-ai-reply', {
+    fetch('https://cap-09-1.onrender.com/api/get-ai-reply', {
       method: 'POST',
       headers: headers,
       body: JSON.stringify({

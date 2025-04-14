@@ -16,25 +16,6 @@ export default function Footer() {
             </address>
           </div>
           
-          <div>
-            <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><a href="/calendar" className="hover:text-blue-200">Academic Calendar</a></li>
-              <li><a href="/directory" className="hover:text-blue-200">Staff Directory</a></li>
-              <li><a href="/careers" className="hover:text-blue-200">Employment</a></li>
-              <li><a href="/alumni" className="hover:text-blue-200">Alumni</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="text-xl font-bold mb-4">Resources</h3>
-            <ul className="space-y-2">
-              <li><a href="/library" className="hover:text-blue-200">Library</a></li>
-              <li><a href="/technology" className="hover:text-blue-200">Technology</a></li>
-              <li><a href="/health" className="hover:text-blue-200">Health & Safety</a></li>
-              <li><a href="/transportation" className="hover:text-blue-200">Transportation</a></li>
-            </ul>
-          </div>
           
           <div>
             <h3 className="text-xl font-bold mb-4">Connect With Us</h3>
@@ -61,7 +42,8 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-blue-800 mt-12 pt-8 text-center">
-          <p>&copy; 2024 Evergreen Academy. All rights reserved.</p>
+          <p>&copy; Copywrite Reserved to EMRS-Tundi </p>
+           <p> Developed By : saif809237@gmail.com</p>
         </div>
       </div>
     </footer>

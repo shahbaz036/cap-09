@@ -3,15 +3,19 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useAuthStore } from './lib/store';
 import Header from './components/layout/Header';
 import Hero from './components/home/Hero';
-import NewsEvents from './components/home/NewsEvents';
-import QuickLinks from './components/home/QuickLinks';
+import AboutNests from './components/home/AboutNests';
+import ImportantLinks from './components/home/ImportantLinks';
 import Footer from './components/layout/Footer';
 import LoginPage from './components/auth/LoginPage';
 import Dashboard from './components/admin/Dashboard';
 import Contact from './components/contact/Contact';
 import About from './components/about/About';
 import Academics from './components/academics/Academics';
-import Admissions from './components/admissions/Admissions';
+import Administration from './components/administration/Administration';
+import Activities from './components/activities/Activities';
+import Gallery from './components/gallery/Gallery';
+import PublicDisclosure from './components/disclosure/PublicDisclosure';
+import ExternalLinks from './components/links/ExternalLinks';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -29,15 +33,15 @@ function App() {
               <Header />
               <main className="flex-grow">
                 <Hero />
-                <NewsEvents />
-                <QuickLinks />
+                <AboutNests />
+                <ImportantLinks />
               </main>
               <Footer />
             </div>
           }
         />
         <Route 
-          path="/about" 
+          path="/about-us" 
           element={
             <div className="min-h-screen flex flex-col">
               <Header />
@@ -57,11 +61,51 @@ function App() {
           } 
         />
         <Route 
-          path="/admissions" 
+          path="/administration" 
           element={
             <div className="min-h-screen flex flex-col">
               <Header />
-              <Admissions />
+              <Administration />
+              <Footer />
+            </div>
+          } 
+        />
+        <Route 
+          path="/activities" 
+          element={
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <Activities />
+              <Footer />
+            </div>
+          } 
+        />
+        <Route 
+          path="/gallery" 
+          element={
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <Gallery />
+              <Footer />
+            </div>
+          } 
+        />
+        <Route 
+          path="/public-disclosure" 
+          element={
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <PublicDisclosure />
+              <Footer />
+            </div>
+          } 
+        />
+        <Route 
+          path="/external-links" 
+          element={
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <ExternalLinks />
               <Footer />
             </div>
           } 
@@ -90,4 +134,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

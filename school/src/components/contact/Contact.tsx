@@ -110,26 +110,6 @@ export default function Contact() {
               </div>
             </div>
           </div>
-
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-semibold mb-6">Department Directory</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {departmentContacts.map(({ department, contacts }) => (
-                <div key={department} className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-3">{department}</h3>
-                  <div className="space-y-3">
-                    {contacts.map(contact => (
-                      <div key={contact.id} className="bg-white p-3 rounded-md shadow-sm">
-                        <div className="font-medium">{contact.name}</div>
-                        <div className="text-sm text-gray-600">{contact.email}</div>
-                        <div className="text-sm text-gray-600">{contact.phone}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
     </div>

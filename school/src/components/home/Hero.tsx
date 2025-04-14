@@ -29,30 +29,6 @@ export default function Hero() {
               (An Autonomous organisation under Ministry of Tribal Affairs), Government of India
             </span>
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button className="
-              min-w-[44px] 
-              min-h-[44px] 
-              bg-yellow-500 
-              text-blue-900 
-              px-6 
-              py-3 
-              rounded-md 
-              font-semibold 
-              hover:bg-yellow-400 
-              text-base 
-              md:text-lg 
-              transition-all
-              transform hover:scale-105
-              focus:outline-none 
-              focus:ring-2 
-              focus:ring-yellow-400
-              focus:ring-offset-2
-              focus:ring-offset-blue-900
-            ">
-              Apply Now
-            </button>
-          </div>
         </div>
       </div>
 

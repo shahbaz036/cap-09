@@ -2,10 +2,15 @@ import React from 'react';
 import { FileText, Download, Calendar } from 'lucide-react';
 import CBSC from '../../pdf/CBSC.pdf';
 import EstablishmentLetter from '../../pdf/Establishment_Letter.pdf';
-import Building_Safety_Certificate from '../../pdf/Building_Safety_Certificate.pdf';
 import WaterSafety from '../../pdf/WaterSafety.pdf';
 import StateSafety from '../../pdf/StateSafety.pdf';
 import Disclosure from '../../pdf/Disclosure.pdf';
+import Daily_Routine from '../../pdf/Daily_Routine.pdf';
+import Teacher_Detail from '../../pdf/Teacher_Detail.pdf';
+import District_Level from '../../pdf/District_Level.pdf';
+import FireSafety from '../../pdf/FireSafety.pdf';
+import Academic_Calendar from '../../pdf/Academic_Calendar.pdf';
+import Fee_Structure from '../../pdf/Fee_Structure.pdf';
 
 export default function PublicDisclosure() {
   const documents = [
@@ -19,7 +24,7 @@ export default function PublicDisclosure() {
       title: 'Building Safety Certificate',
       lastUpdated: '2024-01-20',
       fileSize: '1.8 MB',
-      url: Building_Safety_Certificate
+      url: StateSafety
     },
     {
       title: 'Water Sample Test Report',
@@ -31,13 +36,13 @@ export default function PublicDisclosure() {
       title: 'State Society Registration Certificate',
       lastUpdated: '2023-12-15',
       fileSize: '2.1 MB',
-      url: StateSafety
+      url: CBSC
     },
     {
       title: 'Fire Safety Certificate',
       lastUpdated: '2024-01-10',
       fileSize: '1.5 MB',
-      url: '#'
+      url: FireSafety
     },
     {
       title: 'Certificate of Land',
@@ -56,6 +61,36 @@ export default function PublicDisclosure() {
       lastUpdated: '2023-11-15',
       fileSize: '1.4 MB',
       url: EstablishmentLetter
+    },
+    {
+      title: 'Teachers Detail',
+      lastUpdated: '2024-02-15',
+      fileSize: '1.0 MB',
+      url: Teacher_Detail
+    },
+    {
+      title: 'School Daily Routine',
+      lastUpdated: '2024-02-15',
+      fileSize: '1.0 MB',
+      url: Daily_Routine
+    },
+    {
+      title: 'District Level Certificate',
+      lastUpdated: '2024-02-15',
+      fileSize: '1.0 MB',
+      url: District_Level
+    },
+    {
+      title: 'Fee Structure',
+      lastUpdated: '2024-02-15',
+      fileSize: '2.5 MB',
+      url: Fee_Structure
+    },
+    {
+      title: 'Academic Calendar',
+      lastUpdated: '2024-02-15',
+      fileSize: '2.5 MB',
+      url: Academic_Calendar
     }
   ];
 

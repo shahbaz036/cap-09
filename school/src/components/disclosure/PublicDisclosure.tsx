@@ -17,6 +17,7 @@ import Recognise_Certificate from '../../pdf/Recognise_Certificate.pdf';
 import Parent_Teacher from '../../pdf/Parent_Teacher.pdf';
 import Self_Certification from '../../pdf/Self_Certification.pdf';
 import StateSociety from '../../pdf/StateSociety.pdf';
+import NESTS from '../../pdf/NESTS.pdf';
 
 export default function PublicDisclosure() {
   const documents = [
@@ -43,12 +44,6 @@ export default function PublicDisclosure() {
       lastUpdated: '2024-02-01',
       fileSize: '1.2 MB',
       url: WaterSafety
-    },
-    {
-      title: 'State Society Registration Certificate',
-      lastUpdated: '2023-12-15',
-      fileSize: '2.1 MB',
-      url: CBSC
     },
     {
       title: 'Fire Safety Certificate',
@@ -127,6 +122,12 @@ export default function PublicDisclosure() {
       lastUpdated: '2024-02-15',
       fileSize: '2.5 MB',
       url: StateSociety
+    },
+    {
+      title: 'Copies of societies/trust/Company Registration ',
+      lastUpdated: '2024-02-15',
+      fileSize: '2.5 MB',
+      url: NESTS
     }
   ];
 

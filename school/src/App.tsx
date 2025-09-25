@@ -29,12 +29,15 @@ function App() {
         <Route
           path="/"
           element={
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col bg-white">
               <Header />
               <main className="flex-grow">
                 <Hero />
-                <AboutNests />
-                <ImportantLinks />
+                <div className="space-y-8">
+                  <AboutNests />
+                  <PublicDisclosure isHomePage={true} />
+                  <ImportantLinks />
+                </div>
               </main>
               <Footer />
             </div>

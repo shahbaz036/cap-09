@@ -40,6 +40,7 @@ export default function Header() {
   }, [isMenuOpen]);
 
   const menuItems = [
+    'Home',
     'About Us',
     'Academics',
     'Administration',
@@ -65,13 +66,13 @@ export default function Header() {
       >
         <div className="container mx-auto px-4">
           {/* <div className="flex items-center justify-between h-16 md:h-20"> */}
-          <div className="flex flex-wrap items-center justify-between gap-2 h-auto py-2 md:h-30">
+          <div className="flex flex-wrap items-center justify-between h-auto py-3 md:py-4">
 
             {/* Left Section: Menu Button and Logo */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <button 
                 onClick={toggleMenu}
-                className="lg:hidden min-w-[44px] min-h-[44px] p-2 hover:bg-blue-800 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="lg:hidden min-w-[44px] min-h-[44px] p-2 hover:bg-blue-800 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 flex items-center justify-center"
                 aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={isMenuOpen}
               >
@@ -81,18 +82,18 @@ export default function Header() {
               {/* Logo and School Name Container */}
               <Link 
                 to="/" 
-                className="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg p-1"
+                className="flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-blue-400 rounded-lg p-1.5 hover:bg-blue-800/50 transition-colors"
               >
                 <img 
                   src="https://nests.tribal.gov.in/images/logo_emrs.jpg" 
                   alt="School Logo" 
-                  className="h-10 w-10 md:h-12 md:w-12 rounded-full flex-shrink-0"
+                  className="h-12 w-12 md:h-14 md:w-14 rounded-full flex-shrink-0 border-2 border-white/10"
                 />
                 <div className="flex flex-col min-w-0">
-                  <span className="text-base md:text-xl font-bold leading-tight truncate max-w-[200px] md:max-w-none">
+                  <span className="text-lg md:text-2xl font-bold leading-tight truncate max-w-[200px] md:max-w-none">
                     Eklavya Model Residential School
                   </span>
-                  <span className="text-xs md:text-sm text-blue-200 whitespace-nowrap">
+                  <span className="text-sm md:text-base text-blue-200 whitespace-nowrap opacity-90">
                     UDISE Code: 20120400507
                   </span>
                 </div>
@@ -103,15 +104,15 @@ export default function Header() {
             <nav 
               className={`
                 fixed lg:static
-                top-16 md:top-20 lg:top-auto
+                top-[72px] md:top-[88px] lg:top-auto
                 left-0
                 w-full lg:w-auto
-                h-[calc(100vh-4rem)] lg:h-auto
-                bg-blue-900 lg:bg-transparent
-                transition-transform duration-300 ease-in-out
-                ${isMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                h-[calc(100vh-72px)] md:h-[calc(100vh-88px)] lg:h-auto
+                bg-blue-900/95 backdrop-blur-sm lg:bg-transparent lg:backdrop-blur-none
+                transition-all duration-300 ease-in-out
+                ${isMenuOpen ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 lg:translate-x-0 lg:opacity-100'}
                 overflow-y-auto lg:overflow-visible
-                p-4 lg:p-0
+                p-6 lg:p-0
                 z-50
                 border-t lg:border-t-0 border-blue-800
                 lg:flex lg:items-center lg:justify-center lg:flex-1 lg:mx-8
@@ -119,25 +120,27 @@ export default function Header() {
               aria-label="Main navigation"
             >
               {/* <div className="lg:flex lg:items-center lg:justify-center lg:space-x-1 xl:space-x-2"> */}
-              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-center gap-x-4 gap-y-2">
 
                 {menuItems.map((item) => (
                   <Link 
                     key={item}
-                    to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
+                    to={item === 'Home' ? '/' : `/${item.toLowerCase().replace(/\s+/g, '-')}`}
                     className={`
                       block lg:inline-flex
                       min-h-[44px]
                       items-center
-                      py-3 lg:py-2
-                      px-4 lg:px-3
+                      py-2.5 lg:py-2
+                      px-4 lg:px-4
                       hover:bg-blue-800 lg:hover:bg-blue-800
                       rounded-md
                       transition-colors
                       focus:outline-none focus:ring-2 focus:ring-blue-400
                       text-sm xl:text-base
                       whitespace-nowrap
-                      ${location.pathname === `/${item.toLowerCase().replace(/\s+/g, '-')}` ? 'text-yellow-400' : ''}
+                      ${(item === 'Home' && location.pathname === '/') || 
+                        (item !== 'Home' && location.pathname === `/${item.toLowerCase().replace(/\s+/g, '-')}`) 
+                        ? 'text-yellow-400' : ''}
                     `}
                   >
                     {item}
@@ -155,9 +158,9 @@ export default function Header() {
                 className="
                   bg-yellow-500 
                   text-blue-900 
-                  px-4 
-                  py-2 
-                  rounded-md 
+                  px-6
+                  py-2.5
+                  rounded-lg
                   font-semibold 
                   hover:bg-yellow-400 
                   min-w-[44px] 
@@ -165,7 +168,7 @@ export default function Header() {
                   flex 
                   items-center 
                   justify-center 
-                  text-sm xl:text-base
+                  text-base
                   whitespace-nowrap
                   transition-colors
                   focus:outline-none 

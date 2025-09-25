@@ -3,13 +3,16 @@ import { Target, Users, Award } from 'lucide-react';
 
 export default function AboutNests() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-24 bg-gradient-to-b from-white to-blue-50/50">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">About NESTS</h2>
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">About NESTS</h2>
+            <div className="h-1 w-24 bg-blue-600 mx-auto rounded-full"></div>
+          </div>
           
-          <div className="prose prose-lg max-w-none text-gray-600 mb-12">
-            <p className="mb-6">
+          <div className="prose prose-lg max-w-none text-gray-600 mb-16">
+            <p className="mb-8 text-xl leading-relaxed">
               Eklavya Model Residential School (EMRS) is a Government of India scheme to establish model residential schools for Indian tribals (Scheduled Tribes and PVTGs) across India. It is one of the flagship interventions of the Ministry of Tribal Affairs, Government of India and was introduced in the year 1997-98 to ensure tribal students get access to quality education in the remote tribal areas. The Union Budget for 2018-19 announced that every block with more than 50% ST population and at least 20,000 tribal persons will have Eklavya Model Residential Schools.
             </p>
             <p className="mb-6">
@@ -18,26 +21,32 @@ export default function AboutNests() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-blue-50 rounded-lg">
-              <Target className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Our Mission</h3>
-              <p className="text-gray-600">
+            <div className="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-blue-100">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-6">
+                <Target className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
+              <p className="text-gray-600 text-lg">
                 Providing quality education to tribal students while preserving their cultural identity
               </p>
             </div>
 
-            <div className="text-center p-6 bg-blue-50 rounded-lg">
-              <Users className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Our Impact</h3>
-              <p className="text-gray-600">
+            <div className="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-blue-100">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-6">
+                <Users className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Impact</h3>
+              <p className="text-gray-600 text-lg">
                 Transforming lives through education across 400+ EMRS schools nationwide
               </p>
             </div>
 
-            <div className="text-center p-6 bg-blue-50 rounded-lg">
-              <Award className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Our Achievement</h3>
-              <p className="text-gray-600">
+            <div className="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-blue-100">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-6">
+                <Award className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Achievement</h3>
+              <p className="text-gray-600 text-lg">
                 Consistently achieving excellence in academics and holistic development
               </p>
             </div>
